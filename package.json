@@ -1,0 +1,17 @@
+{
+  "name": "mini-instagram",
+  "main": "./server.coffee",
+  "preferGlobal": true,
+  "description": "A small version of instagram",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "coffee-script": "1.7.1",
+    "express": "^4.9.4",
+    "ibrik": "^1.1.1",
+    "riak-js": "^0.10.2"
+  },
+  "devDependencies": {
+    "coffeelint": "^1.6.0"
+  }
+}
