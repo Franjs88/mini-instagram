@@ -6,8 +6,10 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "body-parser": "^1.9.1",
     "coffee-script": "1.7.1",
     "express": "^4.9.4",
+    "express-validator": "^2.6.0",
     "ibrik": "^1.1.1",
     "riak-js": "^0.10.2"
   },
