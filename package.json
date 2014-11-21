@@ -12,7 +12,7 @@
     "express-validator": "^2.7.0",
     "ibrik": "^1.1.1",
     "multer": "^0.1.6",
-    "riak-js": "^1.0.0"
+    "riak-js": "^0.10.2"
   },
   "devDependencies": {
     "coffeelint": "^1.6.0"
