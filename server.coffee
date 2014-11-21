@@ -1,25 +1,28 @@
 #
-# This is the Main Endpoint for Mini-Instagram application
+# This is the Main Server for Mini-Instagram application
 # More Info:
 # http://liamkaufman.com/blog/2012/03/01/why-riak-and-nodejs-make-a-great-pair/
 #
 
 express = require("express")
 app = express()
+expressValidator = require ("express-validator")
 bodyParser = require("body-parser")
 multer = require ("multer")
+
+
+
+# Required middleware for riak database
+# get client instance (defaults to localhost:8098)
+db = require("riak-js").getClient(
+  host: "localhost"
+  port: "8098"
+)
 
 #all environment
 app.use bodyParser.urlencoded(extended: true)
 app.use bodyParser.json()
 app.use multer(dest: './uploads/')
-
-# Required middleware for riak database
-# get client instance (defaults to localhost:8098)
-db = require ("riak-js").getClient(
-  host: "localhost",
-  port: "8098"
-)
 
 # Port Configuration
 port = process.env.PORT or 8080
@@ -50,10 +53,12 @@ app.get "/", (req, res) ->
 # Saves a photo in database given a filepath
 # ======================================
 savePicture: (image) ->
-  ###name = image.originalname
+  console.log image.path
+  name = image.originalname
   fs.readfile image.path, 'binary', (err,picture) ->
+
     return
-  ###
+
   return
 
 
@@ -80,7 +85,7 @@ app.post "/upload", (req, res) ->
   console.log "Guardando en la BD"
   # Save the photo
   if req.is('multipart/form-data')
-    # Call saveImage function
+    savePicture(req.files)
     return
   else
     console.log("Error: The payload is not an image")
