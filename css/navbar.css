@@ -1,0 +1,33 @@
+
+
+.top-bar{
+    height: 43px;
+    border-bottom: 1px solid rgba(4, 40, 71, 0.8);
+    box-shadow: 0px 1px 0px rgba(111, 151, 182, 0.5) inset, 0px -1px 0px rgba(111, 151, 182, 0.2) inset, 0px 1px 1px rgba(0, 0, 0, 0.2);
+    background-color: #517FA4;
+    background-image: url('//d36xtkk24g8jdx.cloudfront.net/bluebar/f0ebb28/images/shared/noise-1.png'), -moz-linear-gradient(center top , #517FA4, #306088);
+    background-position: 50% 50%;
+    z-index: 100;
+    font-size: 1.4rem;
+    font-family: "proxima-nova","Helvetica Neue",Arial,Helvetica,sans-serif
+}
+
+. navbar-nav {
+    color:#ffffff !important;
+
+}
+
+.top-bar .logo {
+    height: 35px;
+    width: 97px;
+    background: url('//d36xtkk24g8jdx.cloudfront.net/bluebar/f0ebb28/images/shared/shared-assets.png') no-repeat scroll 0px 4px transparent;
+    position: relative;
+    top: 4px;
+    margin: 0px;
+    text-indent: -9999em;
+    color:#ffffff !important;
+}
+
+.top-bar .a {
+    color:#ffffff !important;
+}

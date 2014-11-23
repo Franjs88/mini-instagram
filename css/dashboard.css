@@ -1,0 +1,13 @@
+body {
+  padding-top: 50px;
+  font-size: 1.4rem;
+  font-family: "proxima-nova","Helvetica Neue",Arial,Helvetica,sans-serif
+}
+
+.a {
+  color: #ffffff;
+}
+.photo-feed {
+  padding: 40px 15px;
+  text-align: center;
+}
