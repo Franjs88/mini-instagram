@@ -10,7 +10,7 @@ expressValidator = require ("express-validator")
 bodyParser = require("body-parser")
 multer = require ("multer")
 fs = require ("fs")
-
+util = require ("util")
 
 
 # Required middleware for riak database
@@ -33,25 +33,25 @@ app.use("/", #the URL through which access to static content
   express.static(__dirname) #Serves all content from current directory
 )
 
+class Picture
+
+  ########################################
+  # Saves a photo in database given a filepath
+  # ======================================
+  save: (image, callback) ->
+    console.log "Guardando en la BD la imagen: " + image.path
+    key = image.originalname
+    db.save("photos",key,image)
+    console.log "Guardado: "+key+" en photos"
+    return callback()
+
+module.exports = Picture
+
 ######################################
 # Login action
 # ====================================
 app.post "/signin", (req, res) ->
   return
-
-#############################################
-# Auxiliary functions
-#############################################
-
-########################################
-# Saves a photo in database given a filepath
-# ======================================
-savePicture: (image) ->
-  console.log image.path
-  key = image.originalname
-  db.save("photos",key,image)
-  return
-
 
 ########################################################
 # API Routes Start
@@ -73,10 +73,12 @@ app.get "/photos", (req, res) ->
 # ====================================
 app.post "/photos", (req, res) ->
   console.log req.files
-  console.log "Guardando en la BD"
+  picture = new Picture()
   if req.is('multipart/form-data')
-    savePicture(req.files)
-    res.status(201).send("Created")
+    picture.save(req.files, ->
+      res.status(201).send("Created")
+      return
+    )
     return
   else
     console.log("Error: The payload is not an image")

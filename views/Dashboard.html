@@ -57,14 +57,15 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                        <h4 class="modal-title" id="myModalLabel">Publica una nueva foto!</h4>
                     </div>
                     <div class="modal-body">
                         <p>Selecciona la foto que quieres publicar</p>
-                        <form method='post' action='/photos' enctype='multipart/form-data'>
-                            <input type="file" title="Search for a file to add">
-                            <button class="btn btn-success" type="submit">Publicar</button>
-                            <!--<input type='submit' /> -->
+                        <form id="publish" method='post' action='/photos' enctype='multipart/form-data'>
+                            <input type="file" name='image' title="Search for a file to add">
+                            <input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
+                            <!--<button class="btn btn-success" type="submit">Publicar</button>-->
+                            <input type='submit' value="Publicar"/>
                         </form>
                     </div>
                     <div class="modal-footer">
