@@ -9,6 +9,7 @@ app = express()
 expressValidator = require ("express-validator")
 bodyParser = require("body-parser")
 multer = require ("multer")
+fs = require ("fs")
 
 
 
@@ -27,22 +28,15 @@ app.use multer(dest: './uploads/')
 # Port Configuration
 port = process.env.PORT or 8080
 
-######################################
-# HTML Formulary for the index webpage
-# ====================================
-form = "<!DOCTYPE HTML><html><body>" +
-    "<form method='post' action='/upload' enctype='multipart/form-data'>" +
-    "<input type='file' name='image'/>" +
-    "<input type='submit' /></form>" +
-    "</body></html>"
+
+app.use("/", #the URL through which access to static content
+  express.static(__dirname) #Serves all content from current directory
+)
 
 ######################################
-# Serves the HTML Formulary for the index webpage
+# Login action
 # ====================================
-app.get "/", (req, res) ->
-  res.writeHead 200,
-    "Content-Type": "text/html"
-  res.end form
+app.post "/signin", (req, res) ->
   return
 
 #############################################
@@ -54,11 +48,8 @@ app.get "/", (req, res) ->
 # ======================================
 savePicture: (image) ->
   console.log image.path
-  name = image.originalname
-  fs.readfile image.path, 'binary', (err,picture) ->
-
-    return
-
+  key = image.originalname
+  db.save("photos",key,image)
   return
 
 
@@ -80,12 +71,12 @@ app.get "/photos", (req, res) ->
 # Saves a photo in the database
 # POST /photos
 # ====================================
-app.post "/upload", (req, res) ->
+app.post "/photos", (req, res) ->
   console.log req.files
   console.log "Guardando en la BD"
-  # Save the photo
   if req.is('multipart/form-data')
     savePicture(req.files)
+    res.status(201).send("Created")
     return
   else
     console.log("Error: The payload is not an image")

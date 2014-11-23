@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -39,14 +39,41 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        FranSanchezCarmona <span class="caret"></span>
+                        FranSanchezCarmona
                     </a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Publicar nueva foto</a></li>
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#PublishModal">Publicar nueva foto</a>
+                        </li>
+                        <li class="divider"></li>
                     </ul>
                 </li>
             </ul>
         </div><!--/.nav-collapse -->
+
+        <!-- Publish Modal -->
+        <div class="modal fade" id="PublishModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selecciona la foto que quieres publicar</p>
+                        <form method='post' action='/photos' enctype='multipart/form-data'>
+                            <input type="file" title="Search for a file to add">
+                            <button class="btn btn-success" type="submit">Publicar</button>
+                            <!--<input type='submit' /> -->
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </nav>
 
