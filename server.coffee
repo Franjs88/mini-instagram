@@ -11,6 +11,7 @@ bodyParser = require("body-parser")
 multer = require ("multer")
 fs = require ("fs")
 util = require ("util")
+needle = require ("needle")
 
 
 # Required middleware for riak database
@@ -39,13 +40,26 @@ class Picture
   # Saves a photo in database given a filepath
   # ======================================
   save: (image, callback) ->
-    console.log "Guardando en la BD la imagen: " + image.path
-    key = image.originalname
-    db.save("photos",key,image)
-    console.log "Guardado: "+key+" en photos"
-    return callback()
+    console.log "Guardando en la BD la imagen: " + util.inspect(image)
+    # We read the file
+    fs.readFile(image.path, (err, data) ->
+      if (err)
+        console.log err
+        throw err
+      else
+        key = image.originalname
+        # We save the picture in the database
+        db.save("pruebas",key,data,{encodeUri: true, contentType: "image/png"})
+        console.log "Guardado: "+key+" en photos con data: "
+        return callback(key)
+    )
 
 module.exports = Picture
+
+
+########################################################
+# API Routes Start
+########################################################
 
 ######################################
 # Login action
@@ -53,30 +67,40 @@ module.exports = Picture
 app.post "/signin", (req, res) ->
   return
 
-########################################################
-# API Routes Start
-########################################################
-
 ########################################
 # Retrieves all photos from the database
 # GET /photos
 # ======================================
-app.get "/photos", (req, res) ->
+
+
+########################################
+# Retrieves a specified photo from the database
+# GET /photos/:idPicture
+# ======================================
+app.get "/photos/:idPicture", (req, res) ->
   console.log "Fetching photos from database..."
   #Fetch all photos
+  param = req.params.idPicture
+  needle.get("http://localhost:8098/buckets/photos/keys/"+param, (error, response) ->
+    if (!error && response.statusCode == 200)
+      return res.status(200).send("Ok",res.body)
+    else
+      return res.status(404).send("Not Found")
+  )
   return
 
 
 ######################################
-# Saves a photo in the database
+# Publish a new picture in Mini-Instagram
 # POST /photos
 # ====================================
 app.post "/photos", (req, res) ->
   console.log req.files
-  picture = new Picture()
   if req.is('multipart/form-data')
-    picture.save(req.files, ->
-      res.status(201).send("Created")
+    picture = new Picture()
+    picture.save(req.files.image, (key)->
+      # We send the key that we've just created
+      res.status(201).send("Created", key)
       return
     )
     return
