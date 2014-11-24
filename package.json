@@ -13,6 +13,8 @@
     "ibrik": "^1.1.1",
     "multer": "^0.1.6",
     "needle": "^0.7.10",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
     "riak-js": "^0.10.2"
   },
   "devDependencies": {

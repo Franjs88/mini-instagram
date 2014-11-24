@@ -34,6 +34,56 @@ app.use("/", #the URL through which access to static content
   express.static(__dirname) #Serves all content from current directory
 )
 
+class User
+  @_passport
+
+  constructor: () ->
+    @_passport = require ("passport")
+    LocalStrategy = require("passport-local").Strategy
+
+    @_passport.serializeUser (user, done) ->
+      done null, user
+      return
+
+    @_passport.deserializeUser (obj, done) ->
+      done null, obj
+      return
+
+    @_passport.use new LocalStrategy({usernameField: 'username', passwordField: 'password'},(username, password, done) ->
+      # We retrieve the user from database
+      needle.get("http://localhost:8098/buckets/users/keys/"+username, (error, response) ->
+        if (!error && response.statusCode == 200)
+          console.log "El usuario encontrado es "+response
+          # We check password
+          if (response.password == password)
+            # we call passport's done function with the username of the user found
+            done null, response.key
+          else
+            done null, false, {message: "Incorrect password"}
+        else
+          done null, false, {message: "Incorrect username"}
+      )
+    )
+
+  ########################################
+  # Register a new user into the system
+  # ======================================
+  register: (username, passw, callback) ->
+    console.log "Registrando a :"+username+" con password :"+passw
+    db.save("users",username,{"password": passw})
+    return callback()
+
+  signIn: (username, passw, callback) ->
+    passport.authenticate("local", (req,res) ->
+      # If this function gets called, authentication was successful.
+        res.redirect("/Dashboard/")#+req.user.username)
+    )
+
+    return
+
+module.exports = User
+
+
 class Picture
 
   ########################################
@@ -62,15 +112,42 @@ module.exports = Picture
 ########################################################
 
 ######################################
-# Login action
+# Register a new user into the system
+# POST /signup
 # ====================================
-app.post "/signin", (req, res) ->
+app.post "/signup", (req, res) ->
+  console.log "El body vale: "+util.inspect(req.body)
+  if(req.body != null && req.body != undefined )
+    user = new User()
+    user.register(req.body.username, req.body.password, ->
+      console.log "Creado user con username: "+req.body.username
+      res.status(201).send("Created",req.body.username)
+    )
+  else
+    res.status(401).send("Not acceptable")
+    return
+  return
+
+######################################
+# Logs a user into the system
+# POST /login
+# ====================================
+app.post "/login", (req, res) ->
+  if(req.body != null && req.body != undefined)
+    console.log "Alguien trata de loguearse con username "+req.body.username+" y pass: "+req.body.password
+    login = new User()
+    return
+  else
+    console.log "El cuerpo llega vacio"
+    return res.status(501).send("Internal Error")
   return
 
 ########################################
 # Retrieves all photos from the database
 # GET /photos
 # ======================================
+app.get "/photos", (req,res) ->
+  return
 
 
 ########################################
